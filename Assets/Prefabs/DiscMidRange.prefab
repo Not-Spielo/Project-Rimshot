@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 7145200289729376696}
   - component: {fileID: 2860239413945585502}
   - component: {fileID: 7282065648872156808}
-  - component: {fileID: 281222330124010405}
+  - component: {fileID: 2119088033296516156}
+  - component: {fileID: -689162126767964515}
+  - component: {fileID: 8292101588761048618}
   m_Layer: 0
-  m_Name: Disk
+  m_Name: DiscMidRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 306e486b1921e2544858ce7a0d5597ea, type: 2}
+  - {fileID: 2100000, guid: 622bb4b8dfed10f43a69409442a7651c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,8 +89,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &281222330124010405
-CapsuleCollider:
+--- !u!64 &2119088033296516156
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,10 +105,57 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &-689162126767964515
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368051318619757938}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0.3
+  m_AngularDrag: 1.5
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 2
+--- !u!114 &8292101588761048618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368051318619757938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc5638b5fc5c5143b141e631dba5831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: -689162126767964515}
+  glide: 1.2
+  turn: -1.5
+  fade: 2
+  spinStrength: 5
+  minStableSpinRate: 15
+  maxStableSpinRate: 70
+  wobbleDamping: 20
+  selfRightingTorque: 9
