@@ -1,6 +1,6 @@
 /*=============================================================================
 Script Name:    Player.cs
-Last Edited:    2026-03-22
+Last Edited:    2026-03-24
 Contributors:   Grant Harvey
 Description:    Manages the player's behavior and interactions including camera rotation and disc throwing mechanics
 =============================================================================*/
@@ -9,10 +9,14 @@ using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
-    [Header("Rotation Settings")]
+    [Header("Character Settings")]
+    [SerializeField] private float characterHeightOffset = 1.0f;
     [SerializeField] private float mouseLookSpeed = 2.0f;
     [SerializeField] private float keyboardLookSpeed = 80.0f;
+    [SerializeField] private float minVerticalAngle = -80f;
+    [SerializeField] private float maxVerticalAngle = 80f;
     private float rotationY;
+    private float rotationX;
 
     [Header("Disc Settings")]
     [SerializeField] private Transform handTransform;
@@ -25,6 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxSpinImpulse = 55f;
     private float chargeTime = 0f;
     private bool isCharging = false;
+    [HideInInspector] public GameObject disc;
 
     [Header("Disc Settings Driver")]
     [SerializeField] private GameObject discDriver;
@@ -50,42 +55,72 @@ public class Player : MonoBehaviour
     /* GH - Runs every frame, controls player input */
     void Update()
     {
-        HandleCameraRotation();
-
-        #region GH - Hold Down ThrowDisc button for power
-        if ( Input.GetButtonDown("ThrowDisc") )
+        /* If the disc has not been thrown, set location to disc, allow it to be thrown, and make sure camera is parented correctly */
+        if (false == GameplayManager.Instance.diskInFlight)
         {
-            isCharging = true;
-            chargeTime = 0f;
-        }
+            // this should only proc in a small window where we set the disc movement to be done and before it gets destroyed.
+            if (disc != null)
+                TeleportToDisc();
 
-        if (isCharging && Input.GetButton("ThrowDisc"))
-        {
-            chargeTime += Time.deltaTime;
-        }
+            HandleCameraRotation();
 
-        if (isCharging && Input.GetButtonUp("ThrowDisc"))
-        {
-            isCharging = false;
-            ThrowDisc(chargeTime);
+            #region GH - Hold Down ThrowDisc button for power
+            if (Input.GetButtonDown("ThrowDisc"))
+            {
+                isCharging = true;
+                chargeTime = 0f;
+            }
+
+            if (isCharging && Input.GetButton("ThrowDisc"))
+            {
+                chargeTime += Time.deltaTime;
+            }
+
+            if (isCharging && Input.GetButtonUp("ThrowDisc"))
+            {
+                isCharging = false;
+                ThrowDisc(chargeTime);
+            }
+            #endregion GH - Hold Down ThrowDisc button for power
         }
-        #endregion GH - Hold Down ThrowDisc button for power
     }
 
     /* GH - Simple Camera Rotation based on mouse movement or keyboard input */
     private void HandleCameraRotation()
     {
         float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
         float horizontal = Input.GetAxis("Horizontal");
+        float verical = Input.GetAxis("Vertical");
 
         rotationY += (mouseX * mouseLookSpeed) + (horizontal * keyboardLookSpeed *Time.deltaTime);
+        rotationX += (mouseY * mouseLookSpeed) + (verical * keyboardLookSpeed *Time.deltaTime); 
 
-        transform.rotation = Quaternion.Euler(0f, rotationY, 0f);
+        rotationX = Mathf.Clamp(rotationX, minVerticalAngle, maxVerticalAngle);
+
+        transform.rotation = Quaternion.Euler(-rotationX, rotationY, 0f);
+    }
+
+    /* GH - Teleport player to disc location and ensure they are standing on the ground */
+    private void TeleportToDisc()
+    {
+        Vector3 targetPos = disc.transform.position;
+
+        // Raycast downward to find the exact ground point
+        // We start the ray slightly above the disc in case it's clipping into the grass
+        Ray ray = new Ray(targetPos + Vector3.up * 0.5f, Vector3.down);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 2.0f))
+            targetPos = hit.point;
+
+        targetPos.y += characterHeightOffset;
+        this.transform.position = targetPos;
     }
 
     /* GH - instantiate a disc prefab and apply a force and torque to it */
     private void ThrowDisc(float charge)
     {
+        GameplayManager.Instance.diskInFlight = true;
         float normalized = Mathf.Clamp01(charge / maxChargeTime);
 
         // Power curve
@@ -112,7 +147,7 @@ public class Player : MonoBehaviour
             0
         ) * throwDir;
 
-        GameObject disc = Instantiate(discDriver, handTransform.position, handTransform.rotation);
+        disc = Instantiate(discDriver, handTransform.position, handTransform.rotation);
 
         Rigidbody rb = disc.GetComponent<Rigidbody>();
         DiscFlight discFlight = disc.GetComponent<DiscFlight>();
@@ -121,11 +156,13 @@ public class Player : MonoBehaviour
         rb.AddForce(throwDir * force, ForceMode.Impulse);
         rb.AddTorque(handTransform.up * spinImpulse, ForceMode.Impulse);
 
-        if (discFlight != null)
-        {
-            discFlight.InitializeFlight(normalized);
-        }
+        discFlight.InitializeFlight(normalized);
 
-        Debug.Log($"Charge Time: {chargeTime} \nAccuracy: {accuracy} \nThrow Force: {force} \nRelease Speed: {releaseSpeed}");
+        // Give all camera scripts the disc transform
+        CameraManager.Instance.actionCameraFollow.GetComponent<FollowCamera>().SetTargetDisc(disc.transform);
+        CameraManager.Instance.actionCameraSky.GetComponent<LookAtDiscCamera>().SetTargetDisc(disc.transform);
+        CameraManager.Instance.actionCameraClose.GetComponent<LookAtDiscCamera>().SetTargetDisc(disc.transform);
+
+        //Debug.Log($"Charge Time: {chargeTime} \nAccuracy: {accuracy} \nThrow Force: {force} \nRelease Speed: {releaseSpeed}");
     }
 }

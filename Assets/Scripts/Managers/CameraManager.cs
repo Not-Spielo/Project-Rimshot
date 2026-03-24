@@ -1,26 +1,54 @@
 /*=============================================================================
-Script Name:    Cameramanager.cs
-Last Edited:    2026-03-22
+Script Name:    CameraManager.cs
+Last Edited:    2026-03-24
 Contributors:   Grant Harvey
-Description:    Camera manager that follows the player
+Description:    Camera manager to basically just hold data on cameras
 =============================================================================*/
 using UnityEngine;
 
-public class Cameramanager : MonoBehaviour
+public class CameraManager : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-    private Vector3 _offset;
-    [SerializeField] private float smoothTime;
-    private Vector3 _currentVelocity = Vector3.zero;
+    public static CameraManager Instance;
+
+    [Header("Main Camera Settings")]
+    public Camera mainCamera;
+    public Camera actionCameraFollow;
+    public Camera actionCameraSky;
+    public Camera actionCameraClose;
+
+    private Camera[] allCameras;
 
     private void Awake()
     {
-        _offset = transform.position - target.position;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+        
+        // Store cameras in an array to make mass-disabling easier
+        allCameras = new Camera[] { mainCamera, actionCameraFollow, actionCameraSky, actionCameraClose };
+
+        // Initialize: Only Main is on
+        SwitchToCamera(mainCamera);
     }
 
-    private void LateUpdate()
+    /* GH - Switch Active Camera */
+    public void SwitchToCamera(Camera targetCamera)
     {
-        var targetPosition = target.position + _offset;
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, smoothTime);
+        if (targetCamera == null) return;
+
+        // Disable all cameras first
+        foreach (Camera cam in allCameras)
+        {
+            if (cam != null) cam.enabled = false;
+
+            // Toggle AudioListener if the camera has one
+            AudioListener listener = cam.GetComponent<AudioListener>();
+            if (listener != null)
+            {
+                listener.enabled = (cam == targetCamera);
+            }
+        }
+
+        // Enable the one we want
+        targetCamera.enabled = true;
     }
 }
