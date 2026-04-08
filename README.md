@@ -5,9 +5,10 @@ Main Unity project repo for the roguelike disk golf game, working title "Project
 ---
 
 ## Important Links: 
-- Gitea: https://github.com/Not-Spielo/Project-Rimshot/
+- Github: https://github.com/Not-Spielo/Project-Rimshot/
 - Figma Board: https://www.figma.com/board/WbVKxvyUHnms5erlkpmRmC/Project-Rimshot-Board?node-id=0-1&t=ORw9J70NYJtAj3m4-1
 - shared Google Drive: https://drive.google.com/drive/folders/1dM5zzL010eP7of7oQm5Ye47mWoEeitbi?usp=sharing
+- Devlogs: https://www.youtube.com/@real-spielo 
 
 ---
 
