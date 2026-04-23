@@ -46,6 +46,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float putterSpeed = 20.0f;         // yards per second
     [SerializeField] private float putterMaxDistance = 20.0f;   // feet
 
+    [Header("Roguelike Possible Upgrades")]
+    [SerializeField] private int strokesLostPerThrow = 1;
+
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -120,6 +124,8 @@ public class Player : MonoBehaviour
     /* GH - instantiate a disc prefab and apply a force and torque to it */
     private void ThrowDisc(float charge)
     {
+        #region Disc Power and Accuracy
+
         GameplayManager.Instance.diskInFlight = true;
         float normalized = Mathf.Clamp01(charge / maxChargeTime);
 
@@ -158,11 +164,14 @@ public class Player : MonoBehaviour
 
         discFlight.InitializeFlight(normalized);
 
+        #endregion Disc Power and Accuracy
+
         // Give all camera scripts the disc transform
         CameraManager.Instance.actionCameraFollow.GetComponent<FollowCamera>().SetTargetDisc(disc.transform);
         CameraManager.Instance.actionCameraSky.GetComponent<LookAtDiscCamera>().SetTargetDisc(disc.transform);
         CameraManager.Instance.actionCameraClose.GetComponent<LookAtDiscCamera>().SetTargetDisc(disc.transform);
 
-        //Debug.Log($"Charge Time: {chargeTime} \nAccuracy: {accuracy} \nThrow Force: {force} \nRelease Speed: {releaseSpeed}");
+        // Update Stroke Loss
+        GameplayManager.Instance.UpdateStrokes(strokesLostPerThrow);
     }
 }
