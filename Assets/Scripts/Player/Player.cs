@@ -46,8 +46,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float putterSpeed = 20.0f;         // yards per second
     [SerializeField] private float putterMaxDistance = 20.0f;   // feet
 
-    [Header("Roguelike Possible Upgrades")]
-    [SerializeField] private int strokesLostPerThrow = 1;
 
 
     private void Start()
@@ -59,6 +57,16 @@ public class Player : MonoBehaviour
     /* GH - Runs every frame, controls player input */
     void Update()
     {
+        /* Cancel all User Interaction we are in a cutscene */
+        if (true == DialogueManager.Instance.isDialogueActive)
+        {
+            if (Input.GetButtonDown("Submit"))
+            {
+                DialogueManager.Instance.DisplayNextDialogueLine();
+            }
+            return;
+        }
+
         /* If the disc has not been thrown, set location to disc, allow it to be thrown, and make sure camera is parented correctly */
         if (false == GameplayManager.Instance.diskInFlight)
         {
@@ -172,6 +180,6 @@ public class Player : MonoBehaviour
         CameraManager.Instance.actionCameraClose.GetComponent<LookAtDiscCamera>().SetTargetDisc(disc.transform);
 
         // Update Stroke Loss
-        GameplayManager.Instance.UpdateStrokes(strokesLostPerThrow);
+        GameplayManager.Instance.UpdateStrokes(1 + PlayerData.Instance.strokesLostPerThrowAddition);
     }
 }

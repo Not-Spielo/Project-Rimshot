@@ -1,9 +1,10 @@
 /*=============================================================================
 Script Name:    GameplayManager.cs
-Last Edited:    2026-03-24
+Last Edited:    2026-05-05
 Contributors:   Grant Harvey
 Description:    Manage variables and such for gameplay
 =============================================================================*/
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,9 @@ public class GameplayManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI strokesTillDeathText;
     [SerializeField] private int strokesTillDeath = 5;
+    [SerializeField] private GameObject itemContainer;
+    [SerializeField] private GameObject itemPrefab;
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
     [Header("Game Needed")]
     [SerializeField] private BoxCollider DiscBasket;
@@ -51,6 +55,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    /* GH - Update strokes with how much they lost */
     public void UpdateStrokes(int strokeLoss)
     {
         strokesTillDeath -= strokeLoss;
@@ -65,5 +70,25 @@ public class GameplayManager : MonoBehaviour
     private void GameWin()
     {
         strokesTillDeathText.text = "You Win!";
+    }
+
+    /* GH - Update strokes with how much they lost */
+    public void RefreshItemUI()
+    {
+        // clear old Items in UI
+        foreach (var obj in spawnedItems)
+            Destroy(obj);
+
+        spawnedItems.Clear();
+
+        // rebuild item UI from PlayerData
+        foreach (var item in PlayerData.Instance.items)
+        {
+            GameObject ui = Instantiate(itemPrefab, itemContainer.transform);
+            spawnedItems.Add(ui);
+
+            ItemUIElement element = ui.GetComponent<ItemUIElement>();
+            element.Set(item.item, item.count);
+        }
     }
 }
