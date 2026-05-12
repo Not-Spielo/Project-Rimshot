@@ -23,6 +23,7 @@ public class PlayerData : MonoBehaviour
 
     // Roguelike Items
     [HideInInspector] public List<Items> items = new List<Items>();
+    [HideInInspector] public int totalNumberOfItems;
 
     // Roguelike Upgrade Modifiers
     [HideInInspector] public int strokesLostPerThrowAddition = 0;
@@ -39,12 +40,14 @@ public class PlayerData : MonoBehaviour
     /* NOTE!!! - Every New Roguelike Modifier should be added here with default values */
     public void SetModifiersToDefault()
     {
+        totalNumberOfItems = 0;
         strokesLostPerThrowAddition = 0;
     }
 
     /* GH - Add Items to PlayerData Object */
     public void AddItem(Item newItem)
     {
+        totalNumberOfItems++;
         Items existing = items.Find(i => i.item == newItem);
 
         if (existing != null)
@@ -61,7 +64,6 @@ public class PlayerData : MonoBehaviour
         }
 
         newItem.Apply(this);
-
         GameplayManager.Instance.RefreshItemUI();
     }
 
@@ -75,6 +77,7 @@ public class PlayerData : MonoBehaviour
             for (int i = 0; i < item.count; i++)
             {
                 item.item.Apply(this);
+                totalNumberOfItems++;
             }
         }
     }

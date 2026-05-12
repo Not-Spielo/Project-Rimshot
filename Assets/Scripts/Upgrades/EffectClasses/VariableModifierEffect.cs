@@ -19,6 +19,6 @@ public class VariableModifierEffect : Effect
     {
         data.strokesLostPerThrowAddition += strokeLossPerThrowModifier;
 
-        // Add Future Variables Here ^^^
-    }
+    // Add Future Variables Here ^^^
+}
 }

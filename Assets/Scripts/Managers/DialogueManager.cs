@@ -1,6 +1,6 @@
 /*=============================================================================
 Script Name:    DialogueManager.cs
-Last Edited:    2026-05-05
+Last Edited:    2026-05-12
 Contributors:   Grant Harvey
 Description:    Manage variables and such for Dialogue with NPC's
 =============================================================================*/
@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager Instance;
 
     [Header("Settings")]
+    [SerializeField] private GameObject itemBox;
     [SerializeField] private Image characterIcon;
     [SerializeField] private TextMeshProUGUI characterName;
     [SerializeField] private TextMeshProUGUI dialogueArea;
@@ -39,8 +40,8 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         isDialogueActive = true;
-        currentDialogue = dialogue;
-        animator.Play("Show");
+        currentDialogue = dialogue; 
+        animator.Play("show");
         lines.Clear();
 
         foreach (DialogueLine dialogueLine in dialogue.dialogueLines)
@@ -84,20 +85,18 @@ public class DialogueManager : MonoBehaviour
     void EndDialogue()
     {
         isDialogueActive = false;
-        animator.Play("Hide");
+        animator.Play("hide");
 
         GiveRewards();
     }
 
-    /* GH - give item to player */
+    /* GH - run function to show item choice popup */
     private void GiveRewards()
     {
         if (currentDialogue == null) return;
 
-        foreach (Item item in currentDialogue.rewardItems)
-        {
-            PlayerData.Instance.AddItem(item);
-        }
+        ChooseItem.Instance.itemChoiceAmount = currentDialogue.amountToGive;
+        ChooseItem.Instance.ChooseItems(currentDialogue.chooseBetweenHowManyItems, currentDialogue.canSkip, currentDialogue.rewardItems);
 
         currentDialogue = null;
     }

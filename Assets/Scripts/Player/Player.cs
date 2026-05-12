@@ -57,13 +57,19 @@ public class Player : MonoBehaviour
     /* GH - Runs every frame, controls player input */
     void Update()
     {
-        /* Cancel all User Interaction we are in a cutscene */
+        /* Cancel all User Interaction we are in a cutscene*/
         if (true == DialogueManager.Instance.isDialogueActive)
         {
             if (Input.GetButtonDown("Submit"))
             {
                 DialogueManager.Instance.DisplayNextDialogueLine();
             }
+            return;
+        }
+
+        /* Cancel all User Interaction we are choosing items */
+        if (true == ChooseItem.Instance.isItemSelectionActive)
+        {
             return;
         }
 

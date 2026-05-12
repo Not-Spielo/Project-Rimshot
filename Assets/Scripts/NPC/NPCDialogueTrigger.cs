@@ -6,6 +6,7 @@ Description:    Store Dialogue and Dialogue Reward Data for each NPC and trigger
 =============================================================================*/
 using System;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEditorInternal.VersionControl;
 using UnityEngine;
 
@@ -29,6 +30,9 @@ using UnityEngine;
 {
     public List<DialogueLine> dialogueLines = new List<DialogueLine>();
     public List<Item> rewardItems = new List<Item>();
+    public int amountToGive;
+    public bool canSkip;
+    [Range(1, 3)] public int chooseBetweenHowManyItems;
 }
 
 public class NPCDialogueTrigger : MonoBehaviour
