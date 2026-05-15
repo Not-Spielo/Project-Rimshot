@@ -55,6 +55,9 @@ public class Player : MonoBehaviour
     /* GH - Runs every frame, controls player input */
     void Update()
     {
+        /* KR - If paused, returns so that player can properly interact with menu */
+        if (GameplayManager.Instance.isPaused == true) return;
+
         /* If the disc has not been thrown, set location to disc, allow it to be thrown, and make sure camera is parented correctly */
         if (false == GameplayManager.Instance.diskInFlight)
         {
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour
     /* GH - Simple Camera Rotation based on mouse movement or keyboard input */
     private void HandleCameraRotation()
     {
+        if (GameplayManager.Instance.isPaused == true) return;
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         float horizontal = Input.GetAxis("Horizontal");

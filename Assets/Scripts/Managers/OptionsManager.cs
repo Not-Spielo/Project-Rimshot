@@ -7,11 +7,11 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /*=============================================================================
-Script Name:    <Options Manager>
-Last Edited:    <2026-05-13>
-Contributors:   <Khidany Ruiz>
-Description:    <Handles all Settings in the Options Menu.>
-Notes:          <WE NEED TO MESS WITH THE RESOLUTIONS SETTINGS INSIDE PROJECT SETTINGS -> QUALITY cause RN they are all the same. Default is Medium>
+Script Name:    Options Manager
+Last Edited:    2026-05-13
+Contributors:   Khidany Ruiz
+Description:    Handles all Settings in the Options Menu.
+Notes:          WE NEED TO MESS WITH THE RESOLUTIONS SETTINGS INSIDE PROJECT SETTINGS -> QUALITY cause RN they are all the same. Default is Medium
 =============================================================================*/
 public class OptionsManager : MonoBehaviour
 {

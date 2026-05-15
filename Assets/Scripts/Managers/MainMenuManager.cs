@@ -4,12 +4,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 /*=============================================================================
-Script Name:    <MainMenuManager>
-Last Edited:    <2026-05-13>
-Contributors:   <Khidany>
-Description:    <Manages Scene Transitions, and controller navigation in the Main Menu Scene. >
-Notes:          <Player input invokes Unity events, go to Main Menu Manager, and with the dropdown is all the events we could program for QOL, under controls for UI is the close Submenu. Main Scene I wonder
-if it can tell whats UI and what is Player or we will have a script determine that.>
+Script Name:    MainMenuManager
+Last Edited:    2026-05-13
+Contributors:   Khidany
+Description:    Manages Scene Transitions, and controller navigation in the Main Menu Scene. 
+Notes:          Player input invokes Unity events, go to Main Menu Manager, and with the dropdown is all the events we could program for QOL, under controls for UI is the close Submenu. Main Scene I wonder
+                if it can tell whats UI and what is Player or we will have a script determine that.
 =============================================================================*/
 public class MainMenuManager : MonoBehaviour
 {
@@ -40,8 +40,7 @@ public class MainMenuManager : MonoBehaviour
             }
             else if (lastSelectedOnController != null && lastSelectedOnController.activeInHierarchy)
             {
-                // RECOVERY: If selection is lost (mouse click/Alt-tab), 
-                // snap back to the EXACT last button when the stick is moved
+                // snap back to the last button when the stick is moved
                 EventSystem.current.SetSelectedGameObject(lastSelectedOnController);
             }
         }
@@ -71,7 +70,6 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    // --- DEVICE SWAP LOGIC ---
 
     public void OnControlsChanged()
     {
