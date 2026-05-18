@@ -1,21 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 /*=============================================================================
-Script Name:    Main Menu Manager
+Script Name:    Mid Run Manager
 Last Edited:    2026-05-18
 Contributors:   Khidany Ruiz
-Description:    Handles Certain Interactions in the Main Menu Scene 
+Description:    Handles Certain Interactions in the Play Scene 
 
 =============================================================================*/
-public class MainMenuManager : BaseMenuManager
+public class MidRunManager : BaseMenuManager
 {
 
     [SerializeField] private GameObject optionsPanel;
 
-
-    public void PlayGame()
+    public void ReturnToMenu()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadSceneAsync(0);
     }
 
     public void QuitGame()

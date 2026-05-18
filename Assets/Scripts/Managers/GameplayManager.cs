@@ -1,6 +1,6 @@
 /*=============================================================================
 Script Name:    GameplayManager.cs
-Last Edited:    2026-03-24
+Last Edited:    2026-05-18
 Contributors:   Grant Harvey
 Description:    Manage variables and such for gameplay
 =============================================================================*/
@@ -30,6 +30,7 @@ public class GameplayManager : MonoBehaviour
         isPaused = false;
     }
 
+    // KR Toggle Pausing during game
     public void TogglePause()
     {
         isPaused = !isPaused;

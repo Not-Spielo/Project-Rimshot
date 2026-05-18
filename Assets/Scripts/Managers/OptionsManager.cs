@@ -72,7 +72,7 @@ public class OptionsManager : MonoBehaviour
         audioMixer.SetFloat("MusicVolume", volume);
     }
 
-    /* KR - <Sets the Quality Settings based on the ones in the Project Settings> */
+    /* KR - Sets the Quality Settings based on the ones in the Project Settings> */
     public void SetQuality (int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex);
