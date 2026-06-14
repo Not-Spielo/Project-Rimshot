@@ -8,7 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
@@ -29,12 +31,18 @@ public class ChooseItem : MonoBehaviour
     private List<Item> currentItems;
     private bool currentCanSkip;
     private int currentItemsToChooseFrom;
+    private int selectedIndex = 0;
+    private bool isOnSkip = false;
+    private float inputCooldown = 0.15f;
+    private float inputTimer = 0f;
 
     [Header("References")]
     [SerializeField] private Button skipButton;
     [SerializeField] private List<ItemChoiceUI> choiceUI = new List<ItemChoiceUI>();
     [SerializeField] private TextMeshProUGUI SelectItemText;
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animator; 
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference submitAction;
 
     void Start()
     {
@@ -46,6 +54,96 @@ public class ChooseItem : MonoBehaviour
         skipButton.gameObject.SetActive(false);
         for (int i = 0; i < choiceUI.Count; i++)
             choiceUI[i].item.gameObject.SetActive(false);
+    }
+
+    /* GH - Update UI Controller Navigation for Selecting Item */
+    private void Update()
+    {
+        if (!isItemSelectionActive) return;
+
+        inputTimer -= Time.deltaTime;
+
+        Vector2 move = moveAction.action.ReadValue<Vector2>();
+
+        if (inputTimer <= 0f)
+        {
+            // LEFT / RIGHT
+            if (!isOnSkip)
+            {
+                if (move.x > 0.5f)
+                {
+                    selectedIndex = (selectedIndex + 1) % currentItemsToChooseFrom;
+                    RefreshVisualSelection();
+                    inputTimer = inputCooldown;
+                }
+                else if (move.x < -0.5f)
+                {
+                    selectedIndex--;
+                    if (selectedIndex < 0) selectedIndex = currentItemsToChooseFrom - 1;
+
+                    RefreshVisualSelection();
+                    inputTimer = inputCooldown;
+                }
+            }
+
+            // DOWN -> skip
+            if (move.y < -0.5f)
+            {
+                isOnSkip = true;
+                RefreshVisualSelection();
+                inputTimer = inputCooldown;
+            }
+
+            // UP -> back from skip
+            if (move.y > 0.5f)
+            {
+                isOnSkip = false;
+                selectedIndex = 0;
+                RefreshVisualSelection();
+                inputTimer = inputCooldown;
+            }
+        }
+    }
+
+    /* GH - Update UI to have selected item a little bigger */
+    private void RefreshVisualSelection()
+    {
+        for (int i = 0; i < currentItemsToChooseFrom; i++)
+        {
+            bool selected = (!isOnSkip && i == selectedIndex);
+
+            choiceUI[i].item.transform.localScale = selected ? Vector3.one * 1.05f : Vector3.one;
+        }
+
+        skipButton.transform.localScale = isOnSkip ? Vector3.one * 1.05f : Vector3.one;
+    }
+
+    /* GH - Run OnClick functions for selected item / Skip */
+    private void OnSubmit(InputAction.CallbackContext ctx)
+    {
+        if (!isItemSelectionActive) return;
+
+        if (isOnSkip)
+        {
+            SkipButton();
+        }
+        else
+        {
+            ItemSelectedButton(currentItems[selectedIndex]);
+        }
+    }
+
+    private void OnEnable()
+    {
+        moveAction.action.Enable();
+        submitAction.action.Enable();
+
+        submitAction.action.performed += OnSubmit;
+    }
+
+    private void OnDisable()
+    {
+        submitAction.action.performed -= OnSubmit;
     }
 
     /* GH - Update UI for Selecting Item */
@@ -76,7 +174,6 @@ public class ChooseItem : MonoBehaviour
             choiceUI[i].selectButton.onClick.RemoveAllListeners();
             choiceUI[i].selectButton.onClick.AddListener(() => { ItemSelectedButton(item); });
         }
-
         skipButton.gameObject.SetActive(canSkip);
         SetSelectItemText();
     }

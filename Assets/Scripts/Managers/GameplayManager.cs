@@ -1,14 +1,16 @@
 /*=============================================================================
 Script Name:    GameplayManager.cs
-Last Edited:    2026-05-05
-Contributors:   Grant Harvey
+Last Edited:    2026-06-14
+Contributors:   Grant Harvey, Khidany Ruiz
 Description:    Manage variables and such for gameplay
 =============================================================================*/
+using Unity.VisualScripting.Antlr3.Runtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -16,6 +18,10 @@ public class GameplayManager : MonoBehaviour
 
     [Header("Disc Settings")]
     [HideInInspector] public bool diskInFlight;
+
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuUI;
+    [HideInInspector] public bool isPaused;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI strokesTillDeathText;
@@ -37,6 +43,32 @@ public class GameplayManager : MonoBehaviour
     private void Start()
     {
         diskInFlight = false;
+        isPaused = false;
+    }
+
+    // KR Toggle Pausing during game
+    public void TogglePause()
+    {
+        /* Don't Allow user to pause if choosing item */
+        if (true == ChooseItem.Instance.isItemSelectionActive)
+        {
+            return;
+        }
+
+        isPaused = !isPaused;
+        pauseMenuUI.SetActive(isPaused);
+
+        // KR - avoid camera locking after disabling player input
+        if (isPaused)
+        {
+            Cursor.lockState = CursorLockMode.None; // Let the mouse move freely
+            Cursor.visible = true;                 // Show the cursor
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked; // Snap mouse back to center
+            Cursor.visible = false;                  // Hide the cursor
+        }
         strokesTillDeathText.text = strokesTillDeath + " Strokes Till Death";
     }
 
