@@ -4173,7 +4173,6 @@ GameObject:
   - component: {fileID: 1736334008}
   - component: {fileID: 1736334009}
   - component: {fileID: 1736334010}
-  - component: {fileID: 1736334011}
   m_Layer: 0
   m_Name: Upgrade Selection
   m_TagString: Untagged
@@ -4236,6 +4235,8 @@ MonoBehaviour:
     selectButton: {fileID: 1526217638}
   SelectItemText: {fileID: 1764681983}
   animator: {fileID: 1736334010}
+  moveAction: {fileID: -8784545083839296357, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  submitAction: {fileID: 392368643174621059, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!95 &1736334010
 Animator:
   serializedVersion: 7
@@ -4258,21 +4259,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1736334011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1736334007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1797305971}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
 --- !u!65 &1748744871 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 8704795782450210764, guid: efe8552f9409283448af14f3b1da7dbf, type: 3}
