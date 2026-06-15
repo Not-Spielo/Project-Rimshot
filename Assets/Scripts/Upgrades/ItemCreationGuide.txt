@@ -1,0 +1,20 @@
+So you want to make a new item for the game, well you came to the right place.
+
+
+
+Create Item
+	Simply open the items folder -> right click -> Create -> items -> [Choose Type of Item] -> Fill out inspector with [name, description, icon, effects]
+
+
+
+What If Item Type Doesnt Exist?
+	Open up ItemClasses folder and create an item, you can look at the others to see examples
+
+
+
+What If Effects I want Don't Exist?
+	This one is slightly more difficult and has multiple answers.
+		Open Up Effects folder -> right click -> Create -> Effects -> [Choose Type of Effect] -> Fill out Inspector with Effect Details
+
+	Now Lets say your effect doesnt fit into any of the classes already and you need to create a brand new effect
+		Open up EffectClasses folder and create an Effect, you can look at the others to see examples

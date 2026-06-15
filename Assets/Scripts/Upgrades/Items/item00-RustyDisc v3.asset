@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc58940b12c1d4499c5a352e6fb3cfc, type: 3}
+  m_Name: item00-RustyDisc v3
+  m_EditorClassIdentifier: 
+  itemName: Rusty Disc 3
+  itemIcon: {fileID: 21300000, guid: ab18217e5dc28c84e86f6e1340f30c46, type: 3}
+  itemDescription: Aww Man my disc is now rusty and gross, this is gonna make me
+    have add 1 stroke every time i throw the disc. D;.
+  effects:
+  - {fileID: 11400000, guid: ecb817b0425274944bbfbea188582e64, type: 2}

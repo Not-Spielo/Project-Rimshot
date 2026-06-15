@@ -1,14 +1,16 @@
 /*=============================================================================
 Script Name:    GameplayManager.cs
-Last Edited:    2026-05-18
-Contributors:   Grant Harvey
+Last Edited:    2026-06-14
+Contributors:   Grant Harvey, Khidany Ruiz
 Description:    Manage variables and such for gameplay
 =============================================================================*/
 using Unity.VisualScripting.Antlr3.Runtime;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -18,12 +20,15 @@ public class GameplayManager : MonoBehaviour
     [HideInInspector] public bool diskInFlight;
 
     [Header("Pause Menu")]
-    public GameObject menuUI;
+    [SerializeField] private GameObject pauseMenuUI;
     [HideInInspector] public bool isPaused;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI strokesTillDeathText;
     [SerializeField] private int strokesTillDeath = 5;
+    [SerializeField] private GameObject itemContainer;
+    [SerializeField] private GameObject itemPrefab;
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
     [Header("Game Needed")]
     [SerializeField] private BoxCollider DiscBasket;
@@ -44,15 +49,14 @@ public class GameplayManager : MonoBehaviour
     // KR Toggle Pausing during game
     public void TogglePause()
     {
-        isPaused = !isPaused;
-        if (menuUI == null)
+        /* Don't Allow user to pause if choosing item */
+        if (true == ChooseItem.Instance.isItemSelectionActive)
         {
             return;
         }
-        else
-        {
-            menuUI.SetActive(isPaused);
-        }
+
+        isPaused = !isPaused;
+        pauseMenuUI.SetActive(isPaused);
 
         // KR - avoid camera locking after disabling player input
         if (isPaused)
@@ -83,6 +87,7 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    /* GH - Update strokes with how much they lost */
     public void UpdateStrokes(int strokeLoss)
     {
         strokesTillDeath -= strokeLoss;
@@ -97,5 +102,25 @@ public class GameplayManager : MonoBehaviour
     private void GameWin()
     {
         strokesTillDeathText.text = "You Win!";
+    }
+
+    /* GH - Update strokes with how much they lost */
+    public void RefreshItemUI()
+    {
+        // clear old Items in UI
+        foreach (var obj in spawnedItems)
+            Destroy(obj);
+
+        spawnedItems.Clear();
+
+        // rebuild item UI from PlayerData
+        foreach (var item in PlayerData.Instance.items)
+        {
+            GameObject ui = Instantiate(itemPrefab, itemContainer.transform);
+            spawnedItems.Add(ui);
+
+            ItemUIElement element = ui.GetComponent<ItemUIElement>();
+            element.Set(item.item, item.count);
+        }
     }
 }
